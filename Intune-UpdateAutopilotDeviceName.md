@@ -108,7 +108,9 @@ $params = @{
 	DisplayName = "Auto-1234"
 }
 
-Update-MgDeviceManagementWindowAutopilotDeviceIdentityDeviceProperty -WindowsAutopilotDeviceIdentityId $windowsAutopilotDeviceIdentityId -BodyParameter $params
+Update-MgDeviceManagementWindowAutopilotDeviceIdentityDeviceProperty `
+    -WindowsAutopilotDeviceIdentityId $windowsAutopilotDeviceIdentityId `
+    -BodyParameter $params
 ```
 
 なるほど [`Update-MgDeviceManagementWindowAutopilotDeviceIdentityDeviceProperty`](https://learn.microsoft.com/en-us/powershell/module/microsoft.graph.devicemanagement.actions/update-mgdevicemanagementwindowautopilotdeviceidentitydeviceproperty?view=graph-powershell-1.0) コマンドが対応するのですね。
@@ -116,7 +118,9 @@ Update-MgDeviceManagementWindowAutopilotDeviceIdentityDeviceProperty -WindowsAut
 スニペットではパラメータ指定をハッシュで行なっていますが、ドキュメントをみると [displayName] を直接引数で指定することもできるようですので、試してみましょう。
 
 ```powershell
-PS > Update-mgDeviceManagementWindowAutopilotDeviceIdentityDeviceProperty -WindowsAutopilotDeviceIdentityId $windowsAutopilotDeviceIdentityId -DisplayName 'Auto-0123'
+PS > Update-mgDeviceManagementWindowAutopilotDeviceIdentityDeviceProperty `
+    -WindowsAutopilotDeviceIdentityId $windowsAutopilotDeviceIdentityId `
+    -DisplayName 'Auto-0123'
 
 PS > Get-MgDeviceManagementWindowAutopilotDeviceIdentity | fl id,displayName
 
@@ -144,7 +148,9 @@ DisplayName : Auto-0123
 `Export-Csv` コマンドレットを使用して CSV に出力します。 エントリーが一件だけだと繰り返し処理の確認ができないのでもう一つ Autopilot デバイスを事前に追加しました。
 
 ```powershell
-PS > Get-MgDeviceManagementWindowAutopilotDeviceIdentity | Select id,displayname | Export-Csv -Encoding utf8 -Path c:\tmp\autopilot-devices.csv
+PS > Get-MgDeviceManagementWindowAutopilotDeviceIdentity | `
+    Select id,displayname | `
+    Export-Csv -Encoding utf8 -Path c:\tmp\autopilot-devices.csv
 PS > cat C:\tmp\autopilot-devices.csv
 "Id","DisplayName"
 "b56afdbc-d4f7-4efb-a1a3-14ffcee9----",""
