@@ -3,7 +3,7 @@
 
 Autopilot はデバイス プロビジョニングの新しい形として有用ですが、運用観点ではまだ色々と物足りないところがあります。その一つが、ホスト名の指定が簡単な[テンプレート](https://learn.microsoft.com/ja-jp/mem/autopilot/profiles)でしか与えられないところなどです。（ex. `Auto-%RAND:4%` 接頭辞 Auto- に続けて４桁の乱数）
 
-別解として、Autopilot デバイス オブジェクト の プロパティ ”デバイス名” を指定することで任意にホスト名を設定できますが、この指定は１レコードずつ行わなければならないという不便さがあり、一長一短というかんじです。
+別解として、Autopilot デバイス オブジェクトのプロパティ ”デバイス名” を指定することで任意にホスト名を設定できますが、この指定は１レコードずつ行わなければならないという不便さがあり、一長一短というかんじです。
 
 しかし、Graph API からこのプロパティを更新することができればバルク処理に道が開けるので、その実現性を検証してみましょう。
 
@@ -13,7 +13,7 @@ https://learn.microsoft.com/ja-jp/graph/api/resources/intune-enrollment-windowsa
 
 ## Graph Powershell SDK のセットアップ
 
-Graph API PowerShell SDK は Graph API のラッパーとして機能して、API の操作を PowerShell から簡便に実行させてくれる便利なツールセットです。 こちらを使って Autopilot デバイス情報を操作していきます。
+Graph API PowerShell SDK は Graph API のラッパーとして機能して、API の操作を PowerShell から簡便に実行させてくれる便利なツールセットです。こちらを使って Autopilot デバイス情報を操作していきます。
 
 ### まずはインストール
 
@@ -40,9 +40,9 @@ PS > Connect-MgGraph -Scopes "DeviceManagementServiceConfig.ReadWrite.All"
 Welcome To Microsoft Graph!
 ```
 
-`-Scope` の引数は Graph API にアクセスする際に適用する権限になります。 必要な権限は API のドキュメント（例 [windowsAutopilotDeviceIdentities](https://learn.microsoft.com/ja-jp/graph/api/intune-enrollment-windowsautopilotdeviceidentity-list?view=graph-rest-1.0#prerequisites)）に記載があるので、最小権限の原則にそって必要なレベルを選択してください。 今回は更新処理を行うので `ReadWrite` を選択しています。
+`-Scope` の引数は Graph API にアクセスする際に適用する権限になります。必要な権限は API のドキュメント（例 [windowsAutopilotDeviceIdentities](https://learn.microsoft.com/ja-jp/graph/api/intune-enrollment-windowsautopilotdeviceidentity-list?view=graph-rest-1.0#prerequisites)）に記載があるので、最小権限の原則にそって必要なレベルを選択してください。今回は更新処理を行うので `ReadWrite` を選択しています。
 
-コマンドを実行するとブラウザが立ち上がるので、以後のコマンドを実行させたいテナントのアカウントでサインオンを実行してください。 その際に、コマンドで指定した権限が画面上にリストされるで意図にあったものか改めて確認しましょう。
+コマンドを実行するとブラウザが立ち上がるので、以後のコマンドを実行させたいテナントのアカウントでサインオンを実行してください。その際に、コマンドで指定した権限が画面上にリストされるで意図にあったものか改めて確認しましょう。
 
 "`Welcome To Microsoft Graph!`" とメッセージが表示されれば接続完了です。
 
@@ -83,7 +83,7 @@ AdditionalProperties         : {}
 
 ## デバイス名を更新する
 
-Autopilot デバイスの [デバイス名] に該当する Graph API オブジェクトの属性は [DisplayName] です。 Microsoft Intune の表示言語を英語にしても [Device name]です。（名称を統一してほしい・・・）
+Autopilot デバイスの [デバイス名] に該当する Graph API オブジェクトの属性は [DisplayName] です。Microsoft Intune の表示言語を英語にしても [Device name]です。（名称を統一してほしい・・・）
 
 <img src="./img/Intune-UAPDN-03.png" alt="Autopilot デバイスのプロパティ画面" width="250">
 
@@ -105,7 +105,7 @@ Autopilot デバイスの [デバイス名] に該当する Graph API オブジ�
 Import-Module Microsoft.Graph.DeviceManagement.Actions
 
 $params = @{
-	DisplayName = "Auto-1234"
+    DisplayName = "Auto-1234"
 }
 
 Update-MgDeviceManagementWindowAutopilotDeviceIdentityDeviceProperty `
@@ -133,11 +133,11 @@ Id          : 0e8e8a3a-b059-4a17-a3f5-f5d9a2e6----
 DisplayName : Auto-0123
 ```
 
-`Update` を実行したすぐ後では反映を確認できませんでしたが、ちょと待って再実行すると更新が反映されたことが確認できました。 これで行けそうです。
+`Update` を実行したすぐ後では反映を確認できませんでしたが、ちょと待って再実行すると更新が反映されたことが確認できました。これで行けそうです。
 
 ## バルク更新に向けて
 
-`Update` コマンドで指定するのは Azure Active Directory に登録された Autopilot デバイス オブジェクトの ID　になります。 そのため、まずはこの ID のリストを作って、そのリストの各IDに対応するホスト名を手作業で編集し、そのリストの各ラインを `Update` コマンドの処理対象にする、というプロセスで実行することにしましょう。
+`Update` コマンドで指定するのは Azure Active Directory に登録された Autopilot デバイス オブジェクトの ID になります。そのため、まずはこの ID のリストを作って、そのリストの各IDに対応するホスト名を手作業で編集し、そのリストの各ラインを `Update` コマンドの処理対象にする、というプロセスで実行することにしましょう。
 
 1. Autopilot デバイスのリストをCSVに出力
 2. CSV にホスト名を追記（マニュアル作業）
@@ -145,7 +145,7 @@ DisplayName : Auto-0123
 
 ### Autopilot デバイスのリストをCSVに出力
 
-`Export-Csv` コマンドレットを使用して CSV に出力します。 エントリーが一件だけだと繰り返し処理の確認ができないのでもう一つ Autopilot デバイスを事前に追加しました。
+`Export-Csv` コマンドレットを使用して CSV に出力します。エントリーが一件だけだと繰り返し処理の確認ができないのでもう一つ Autopilot デバイスを事前に追加しました。
 
 ```powershell
 PS > Get-MgDeviceManagementWindowAutopilotDeviceIdentity | `
@@ -189,9 +189,18 @@ b56afdbc-d4f7-4efb-a1a3-14ffcee9---- APD-0001
 
 こちらでも更新が確認できました。
 
-*注* スクリプトは動作を理解するためのサンプルにすぎず、エラー処理など一切考慮していないので適宜補ってください。
+**注** スクリプトは動作を理解するためのサンプルにすぎず、エラー処理など一切考慮していないので適宜補ってください。
 
 ## まとめ
 自由度のないテンプレートしか使えなかったホスト名の指定も、Graph API を活用することで組織の運用に沿ったものを指定することができました。Autopilot デバイスが登録された都度に作業をするのが面倒なので、ハード ベンダーさんが登録を代行する際に指定してくれるようになるといいなぁ。
+
+# 書き手
+吉野　雅人 / Masato YOSHINO  
+<myoshino at マイクロソフト>
+
+プリセールスエンジニア＠日本マイクロソフト株式会社
+Microsoft 365、特に Enterprise Mobility + Security (Microsoft Intune, Azure Active Directory) を担当しています。
+
+記事は個人の見解に基づいた内容であり、所属する会社の公式見解ではありません。また、記事中の情報はいかなる保証を与えるものでもありません。正式な情報は、各製品の販売元にご確認ください。
 
 [back to index](README.md)
