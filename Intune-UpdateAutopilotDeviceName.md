@@ -85,7 +85,7 @@ AdditionalProperties         : {}
 
 Autopilot デバイスの [デバイス名] に該当する Graph API オブジェクトの属性は [DisplayName] です。 Microsoft Intune の表示言語を英語にしても [Device name]です。（名称を統一してほしい・・・）
 
-<img src="./img/Intune-UAPDN-03.png" alt="AAD Autopilot デバイスのプロパティ画面" width="250">
+<img src="./img/Intune-UAPDN-03.png" alt="Autopilot デバイスのプロパティ画面" width="250">
 
 デバイス名の更新は API [updateDeviceProperties](https://learn.microsoft.com/ja-jp/graph/api/intune-enrollment-windowsautopilotdeviceidentity-updatedeviceproperties?view=graph-rest-1.0) を使用します。
 
@@ -185,7 +185,7 @@ b56afdbc-d4f7-4efb-a1a3-14ffcee9---- APD-0001
 
 コマンド上では無事に更新されたことが確認できましたので、Microsoft Intune からも確認してみましょう。
 
-[更新後のDisplayNameがわかるキャプチャ]
+<img src="./img/Intune-UAPDN-06.png" alt="更新後のDisplayName" width="200">
 
 こちらでも更新が確認できました。
 
