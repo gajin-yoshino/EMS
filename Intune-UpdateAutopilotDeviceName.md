@@ -1,9 +1,9 @@
 
 # Autopilot デバイス を Graph API で操作する
 
-Autopilot はデバイス プロビジョニングの新しい形として有用だけど、運用観点ではまだ色々と物足りないところがあります。その一つが、ホスト名の指定が簡単な[テンプレート](https://learn.microsoft.com/ja-jp/mem/autopilot/profiles)でしか与えることができないところです。（ex. `Auto-%RAND:4%` 接頭辞 Auto- に続けて４桁の乱数）
+Autopilot はデバイス プロビジョニングの新しい形として有用ですが、運用観点ではまだ色々と物足りないところがあります。その一つが、ホスト名の指定が簡単な[テンプレート](https://learn.microsoft.com/ja-jp/mem/autopilot/profiles)でしか与えられないところなどです。（ex. `Auto-%RAND:4%` 接頭辞 Auto- に続けて４桁の乱数）
 
-別解として、Autopilot デバイス オブジェクト の プロパティ ”デバイス名” を指定することで任意にホスト名を設定することができるけれど、この指定は１レコードずつ行わなければならないという不便さがあり、一長一短というかんじです。
+別解として、Autopilot デバイス オブジェクト の プロパティ ”デバイス名” を指定することで任意にホスト名を設定できますが、この指定は１レコードずつ行わなければならないという不便さがあり、一長一短というかんじです。
 
 しかし、Graph API からこのプロパティを更新することができればバルク処理に道が開けるので、その実現性を検証してみましょう。
 
@@ -40,7 +40,7 @@ PS > Connect-MgGraph -Scopes "DeviceManagementServiceConfig.ReadWrite.All"
 Welcome To Microsoft Graph!
 ```
 
-`-Scope` の引数は Graph API にアクセスする際に適用する権限になります。 必要な権限は API のドキュメント（例 [windowsAutopilotDeviceIdentities](https://learn.microsoft.com/ja-jp/graph/api/intune-enrollment-windowsautopilotdeviceidentity-list?view=graph-rest-1.0#prerequisites)）に記載があるので、最小権限の原則にそって必要なレベルを選択してください。 
+`-Scope` の引数は Graph API にアクセスする際に適用する権限になります。 必要な権限は API のドキュメント（例 [windowsAutopilotDeviceIdentities](https://learn.microsoft.com/ja-jp/graph/api/intune-enrollment-windowsautopilotdeviceidentity-list?view=graph-rest-1.0#prerequisites)）に記載があるので、最小権限の原則にそって必要なレベルを選択してください。 今回は更新処理を行うので `ReadWrite` を選択しています。
 
 コマンドを実行するとブラウザが立ち上がるので、以後のコマンドを実行させたいテナントのアカウントでサインオンを実行してください。 その際に、コマンドで指定した権限が画面上にリストされるで意図にあったものか改めて確認しましょう。
 
@@ -50,11 +50,11 @@ Welcome To Microsoft Graph!
 
 [Graph Explorer](https://developer.microsoft.com/ja-jp/graph/graph-explorer) でまずは動きを確認してみましょう。
 
-[エクスプローラで実行した画像を挿入]
+![エクスプローラで実行](./img/Intune-UAPDN-01.png)
 
 実行結果を出力しているペインのタブの [コードスニペット] を選択すると、今実行したのと同じ内容となるスクリプトが言語ごとに表示されます。
 
-[エクスプローラで実行した画像を挿入]
+![スニペットを表示](./img/Intune-UAPDN-02.png)
 
 では、スニペットに表示されていたコマンドを実行してみましょう。
 
@@ -85,17 +85,17 @@ AdditionalProperties         : {}
 
 Autopilot デバイスの [デバイス名] に該当する Graph API オブジェクトの属性は [DisplayName] です。 Microsoft Intune の表示言語を英語にしても [Device name]です。（名称を統一してほしい・・・）
 
-[AAD Autopilot デバイスのプロパティ画面をキャプチャ]
+<img src="./img/Intune-UAPDN-03.png" alt="AAD Autopilot デバイスのプロパティ画面" width="250">
 
 デバイス名の更新は API [updateDeviceProperties](https://learn.microsoft.com/ja-jp/graph/api/intune-enrollment-windowsautopilotdeviceidentity-updatedeviceproperties?view=graph-rest-1.0) を使用します。
 
 では、こちらも Graph Explorer で実行してみましょう。
 
-[実行内容をキャプチャ]
+![Graph Explorer で実行](./img/Intune-UAPDN-04.png)
 
 変更が反映されたか確認してみます。
 
-[実行内容をキャプチャ]
+![Graph Explorer で更新反映を確認](./img/Intune-UAPDN-05.png)
 
 無事に反映されていました。
 
